@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:insta_clone/presentations/ChatPage/chat_page.dart';
+
 class InstagramAppbar extends StatelessWidget implements PreferredSizeWidget {
   const InstagramAppbar({super.key});
-
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: const EdgeInsets.only(top:25.0),
+        padding: const EdgeInsets.only(top: 0),
         child: Container(
           height: 56,
           decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.black,
-                width: 0.5
-              )
-            )
+            border: Border(bottom: BorderSide(color: Colors.black, width: 0.5)),
           ),
           child: AppBar(
             backgroundColor: Colors.white,
@@ -32,17 +28,19 @@ class InstagramAppbar extends StatelessWidget implements PreferredSizeWidget {
             ),
             actions: [
               IconButton(
-                onPressed: (){}, icon: Icon(Icons.favorite_border_outlined),
+                onPressed: () {},
+                icon: Icon(Icons.favorite_border_outlined),
               ),
-              IconButton(
-                  onPressed: (){}, icon: Icon(Icons.message_outlined)
-              )
+              IconButton(onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>UsersOnChatPage()));
+              }, icon: Icon(Icons.message_outlined)),
             ],
           ),
         ),
       ),
     );
   }
+
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

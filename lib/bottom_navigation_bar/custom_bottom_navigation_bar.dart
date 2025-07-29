@@ -14,12 +14,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: Colors.black,
-            width: 0.5
-          )
-        )
+        border: Border(top: BorderSide(color: Colors.black, width: 0.5)),
       ),
       child: BottomNavigationBar(
         elevation: 8,
@@ -41,19 +36,30 @@ class CustomBottomNavigationBar extends StatelessWidget {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(selectedIndex == 1 ? Icons.search : Icons.search_outlined),
+            icon: Icon(
+              selectedIndex == 1 ? Icons.search : Icons.search_outlined,
+            ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(selectedIndex == 2 ? Icons.add_box : Icons.add_box_outlined),
+            icon: Icon(
+              selectedIndex == 2 ? Icons.add_box : Icons.add_box_outlined,
+            ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(selectedIndex == 3 ? Icons.play_circle : Icons.play_circle_outline),
+            icon: Icon(
+              selectedIndex == 3
+                  ? Icons.play_circle
+                  : Icons.play_circle_outline,
+            ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(selectedIndex == 4 ? Icons.person : Icons.person_outline, size: 20),
+            icon: Icon(
+              selectedIndex == 4 ? Icons.person : Icons.person_outline,
+              size: 20,
+            ),
             label: '',
           ),
         ],
