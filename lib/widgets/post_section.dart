@@ -1,17 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:insta_clone/widgets/post_controller.dart';
 import 'package:intl/intl.dart';
 import 'comment_page.dart';
+import 'package:get/get.dart';
 
-class PostSection extends StatefulWidget {
-  const PostSection({super.key});
+class PostSection extends StatelessWidget {
+  PostSection({super.key});
 
-  @override
-  State<PostSection> createState() => _PostSectionState();
-}
+  final PostController postController = Get.put(PostController());
 
-class _PostSectionState extends State<PostSection> {
   final String userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
@@ -41,11 +40,7 @@ class _PostSectionState extends State<PostSection> {
           children: posts.map((doc) {
             final post = doc.data() as Map<String, dynamic>;
             final postId = doc.id;
-            return _PostItem(
-              post: post,
-              postId: postId,
-              userId: userId,
-            );
+            return _PostItem(post: post, postId: postId);
           }).toList(),
         );
       },
@@ -56,76 +51,31 @@ class _PostSectionState extends State<PostSection> {
 class _PostItem extends StatefulWidget {
   final Map<String, dynamic> post;
   final String postId;
-  final String userId;
 
-  const _PostItem({
-    required this.post,
-    required this.postId,
-    required this.userId,
-  });
+  const _PostItem({required this.post, required this.postId});
 
   @override
   State<_PostItem> createState() => _PostItemState();
 }
 
 class _PostItemState extends State<_PostItem> {
-  late bool _isLiked;
-  late int _likeCount;
+  final postController = Get.find<PostController>();
 
   @override
   void initState() {
     super.initState();
-    _isLiked = false;
-    _likeCount = 0;
-    _loadLikeStatus();
-  }
-
-  void _loadLikeStatus() async {
-    final likeDoc = await FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.postId)
-        .collection('likes')
-        .doc(widget.userId)
-        .get();
-
-    final likesSnapshot = await FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.postId)
-        .collection('likes')
-        .get();
-
-    if (mounted) {
-      setState(() {
-        _isLiked = likeDoc.exists;
-        _likeCount = likesSnapshot.docs.length;
-      });
-    }
-  }
-
-  void _toggleLike() async {
-    final likeRef = FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.postId)
-        .collection('likes')
-        .doc(widget.userId);
-
-    if (_isLiked) {
-      await likeRef.delete();
-      setState(() {
-        _isLiked = false;
-        _likeCount -= 1;
-      });
-    } else {
-      await likeRef.set({'likedAt': FieldValue.serverTimestamp()});
-      setState(() {
-        _isLiked = true;
-        _likeCount += 1;
-      });
-    }
+    postController.loadLikeStatus(widget.postId, postController.userId);
+    postController.setupCommentCountStream(widget.postId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final post = widget.post;
+    final postId = widget.postId;
+    final postController = Get.find<PostController>();
+    postController.loadLikeStatus(postId, postController.userId);
+    postController.setupCommentCountStream(postId);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -136,8 +86,7 @@ class _PostItemState extends State<_PostItem> {
             children: [
               CircleAvatar(
                 radius: 15,
-                backgroundImage:
-                AssetImage(widget.post['profile_image'] ?? ''),
+                backgroundImage: AssetImage(post['profile_image'] ?? ''),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -145,7 +94,7 @@ class _PostItemState extends State<_PostItem> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.post['name'] ?? 'Unknown',
+                      post['name'] ?? 'Unknown',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -153,48 +102,58 @@ class _PostItemState extends State<_PostItem> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      widget.post['timestamp'] != null
-                          ? DateFormat('dd MMM yyyy, hh:mm a')
-                          .format(widget.post['timestamp'].toDate())
+                      post['timestamp'] != null
+                          ? DateFormat(
+                              'dd MMM yyyy, hh:mm a',
+                            ).format(post['timestamp'].toDate())
                           : '',
                       style: const TextStyle(fontSize: 10),
                     ),
                   ],
                 ),
               ),
-              IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.more_vert)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
             ],
           ),
         ),
         const SizedBox(height: 10),
-        _buildPostImage(widget.post['post_image']),
+        _buildPostImage(post['post_image']),
         const SizedBox(height: 2),
         Row(
           children: [
-            IconButton(
-              onPressed: _toggleLike,
-              icon: Icon(
-                _isLiked ? Icons.favorite : Icons.favorite_outline,
-                color: _isLiked ? Colors.red : Colors.black,
-              ),
-            ),
-            Text(_likeCount.toString()),
+            Obx(() {
+              final isLiked = postController.likesMap[postId] ?? false;
+              final likeCount = postController.likeCounts[postId] ?? 0;
+              return Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      isLiked ? Icons.favorite : Icons.favorite_border,
+                      color: isLiked ? Colors.red : Colors.black,
+                    ),
+                    onPressed: () {
+                      postController.toggleLike(postId, postController.userId);
+                    },
+                  ),
+                  Text('$likeCount'),
+                ],
+              );
+            }),
             IconButton(
               onPressed: () {
-                showModalBottomSheet(
-                  context: context,
+                Get.bottomSheet(
+                  CommentPage(postId: postId),
                   isScrollControlled: true,
                   backgroundColor: Colors.white,
-                  builder: (context) => CommentPage(postId: widget.postId),
                 );
               },
               icon: const Icon(Icons.chat_bubble_outline),
             ),
+
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('posts')
-                  .doc(widget.postId)
+                  .doc(postId)
                   .collection('comments')
                   .snapshots(),
               builder: (context, snapshot) {
@@ -202,17 +161,15 @@ class _PostItemState extends State<_PostItem> {
                 return Text(snapshot.data!.docs.length.toString());
               },
             ),
-            IconButton(
-                onPressed: () {}, icon: const Icon(Icons.send)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.send)),
             const Text('10'),
             const Spacer(),
-            IconButton(
-                onPressed: () {}, icon: const Icon(Icons.save_alt)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.save_alt)),
           ],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: Text(widget.post['caption'] ?? ''),
+          child: Text(post['caption'] ?? ''),
         ),
         const SizedBox(height: 10),
       ],
@@ -234,7 +191,7 @@ class _PostItemState extends State<_PostItem> {
       width: double.infinity,
       height: 400,
       errorBuilder: (context, error, stackTrace) =>
-      const Icon(Icons.broken_image),
+          const Icon(Icons.broken_image),
     );
   }
 }

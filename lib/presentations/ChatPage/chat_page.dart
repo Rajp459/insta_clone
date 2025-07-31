@@ -1,64 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:insta_clone/importantdata/user_id.dart';
+import 'chat_page_controller.dart';
 import 'chat_person_item.dart';
 
-class UsersOnChatPage extends StatefulWidget {
+class UsersOnChatPage extends StatelessWidget {
   const UsersOnChatPage({super.key});
 
   @override
-  State<UsersOnChatPage> createState() => _UsersOnChatPageState();
-}
-
-class _UsersOnChatPageState extends State<UsersOnChatPage> {
-  String _currentUserName = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserData();
-  }
-
-  void _fetchUserData() async {
-    final userService = UserService();
-    final String userId = userService.getCurrentUserId();
-
-    try {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-
-      if (userDoc.exists) {
-        setState(() {
-          _currentUserName = userDoc['name'];
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error fetching user data: ${e.toString()}')),
-      );
-    }
-  }
-
-  final Stream<QuerySnapshot<Map<String, dynamic>>> _allUsersStream =
-      FirebaseFirestore.instance.collection('users').snapshots();
-
-  final UserService _userService = UserService();
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ChatPageController());
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(_currentUserName),
-        backgroundColor: Colors.white,
+        title: Obx(
+          () => Text(
+            controller.currentUserName.value,
+            style: TextStyle(backgroundColor: Colors.white),
+          ),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(12),
-        child: ChatPerson(
-          usersStream: _allUsersStream,
-          currentUserId: _userService.getCurrentUserId(),
+        child: Obx(
+          () => ChatPerson(
+            usersStream: controller.userStream,
+            currentUserId: controller.currentUserId.value,
+          ),
         ),
       ),
     );
@@ -115,10 +84,10 @@ class ChatPerson extends StatelessWidget {
             return Card(
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               child: ChatPersonItem(
-                currentUserId: currentUserId,
                 chatPartnerId: userDoc.id,
                 userName: userName,
                 profileImageUrl: profileImageUrl,
+                userService: UserService(),
               ),
             );
           },

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:insta_clone/presentations/ChatPage/chat_page_controller.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ChatPageController());
     return SafeArea(
       bottom: false,
       child: Padding(
@@ -22,27 +23,11 @@ class AccountPage extends StatelessWidget {
             leadingWidth: 130,
             leading: Padding(
               padding: const EdgeInsets.only(left: 16),
-              child: FutureBuilder<DocumentSnapshot>(
-                future: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .get(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  }
-
-                  if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return Text("User data not found");
-                  }
-
-                  final userData =
-                      snapshot.data!.data() as Map<String, dynamic>;
-                  return Text(
-                    "${userData['user_name']}",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  );
-                },
+              child: Obx(
+                () => Text(
+                  controller.currentUserName.value,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
             actions: [

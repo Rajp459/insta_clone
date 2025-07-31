@@ -1,9 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:insta_clone/loginAndSignUp/login_page.dart';
-import 'package:insta_clone/loginAndSignUp/user_profile_setup.dart';
-
-
+import 'package:insta_clone/loginAndSignUp/registration_controller.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -13,39 +11,9 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-
-  Future<void> register() async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registration Successful'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const UserProfileSetup()),
-      );
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.message ?? 'Registration Failed'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final RegistrationController controller = Get.put(RegistrationController());
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -62,7 +30,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              controller: emailController,
+              controller: controller.emailController,
               decoration: InputDecoration(
                 labelText: 'Email',
                 prefixIcon: const Icon(Icons.email),
@@ -73,7 +41,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: passwordController,
+              controller: controller.passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Password',
@@ -85,17 +53,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: register,
+              onPressed: controller.register,
               child: const Text('Sign Up', style: TextStyle(fontSize: 20)),
             ),
             const Spacer(),
             InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginPage()),
-                );
-              },
+              onTap: () => Get.to(() => LoginPage()),
               child: const Text(
                 'Back to Login Page',
                 style: TextStyle(fontSize: 20, color: Colors.blueAccent),
@@ -106,5 +69,4 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
   }
-
 }

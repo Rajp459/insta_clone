@@ -1,13 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:insta_clone/loginAndSignUp/login_page.dart';
-import 'package:insta_clone/presentations/AccountPages/account_page.dart';
-import 'package:insta_clone/presentations/PostPage/post_page.dart';
-import 'package:insta_clone/presentations/ReelPage/reel_page.dart';
-import 'package:insta_clone/presentations/SearchPage/search_page.dart';
+import 'package:get/get.dart';
+import 'bottom_navigation_bar/bottom_nav_bar_controller.dart';
 import 'bottom_navigation_bar/custom_bottom_navigation_bar.dart';
-import 'presentations/HomePage/home_page.dart';
+import 'loginAndSignUp/auth_check.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +16,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
@@ -38,50 +34,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-  final List<Widget> _pages = [
-    HomePage(),
-    SearchPage(),
-    PostPage(),
-    ReelsPage(),
-    AccountPage(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
+  @override
+  Widget build(BuildContext context) {
+    final BottomNavBarController navBarController = Get.put(
+      BottomNavBarController(),
+    );
+    return Obx(() {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: navBarController.pages[navBarController.selectedIndex.value],
+        bottomNavigationBar: CustomBottomNavigationBar(
+          selectedIndex: navBarController.selectedIndex.value,
+          onItemTapped: navBarController.changeTabIndex,
+        ),
+      );
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: CustomBottomNavigationBar(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class AuthCheck extends StatelessWidget {
-  const AuthCheck({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData) {
-          return MyHomePage(title: '');
-        } else {
-          return LoginPage();
-        }
-      },
-    );
   }
 }

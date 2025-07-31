@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:insta_clone/presentations/ChatPage/chat_page.dart';
+import 'package:get/get.dart';
 
 class InstagramAppbar extends StatelessWidget implements PreferredSizeWidget {
   const InstagramAppbar({super.key});
@@ -21,7 +22,7 @@ class InstagramAppbar extends StatelessWidget implements PreferredSizeWidget {
             leading: Padding(
               padding: const EdgeInsets.only(left: 12),
               child: Image.asset(
-                'images/logos/instaAppbarLogo.png',
+                'assets/logos/instaAppbarLogo.png',
                 height: 100,
                 fit: BoxFit.contain,
               ),
@@ -31,9 +32,10 @@ class InstagramAppbar extends StatelessWidget implements PreferredSizeWidget {
                 onPressed: () {},
                 icon: Icon(Icons.favorite_border_outlined),
               ),
-              IconButton(onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>UsersOnChatPage()));
-              }, icon: Icon(Icons.message_outlined)),
+              IconButton(
+                onPressed: () => Get.to(UsersOnChatPage()),
+                icon: Icon(Icons.message_outlined),
+              ),
             ],
           ),
         ),

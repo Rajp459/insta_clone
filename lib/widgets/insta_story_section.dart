@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class InstaStorySection extends StatelessWidget {
   final List<Map<String, String>> stories = [
-    {'name': 'Your Story', 'image': 'images/users/office-man.png'},
-    {'name': 'rahul', 'image': 'images/users/man.png'},
-    {'name': 'rohan', 'image': 'images/users/man.png'},
-    {'name': 'shyam', 'image': 'images/users/man.png'},
-    {'name': 'kishan', 'image': 'images/users/man.png'},
-    {'name': 'rahul', 'image': 'images/users/man.png'},
-    {'name': 'rohan', 'image': 'images/users/man.png'},
-    {'name': 'shyam', 'image': 'images/users/man.png'},
-    {'name': 'kishan', 'image': 'images/users/man.png'},
+    {'name': 'Your Story', 'image': 'assets/users/office-man.png'},
+    {'name': 'rahul', 'image': 'assets/users/man.png'},
+    {'name': 'rohan', 'image': 'assets/users/man.png'},
+    {'name': 'shyam', 'image': 'assets/users/man.png'},
+    {'name': 'kishan', 'image': 'assets/users/man.png'},
+    {'name': 'rahul', 'image': 'assets/users/man.png'},
+    {'name': 'rohan', 'image': 'assets/users/man.png'},
+    {'name': 'shyam', 'image': 'assets/users/man.png'},
+    {'name': 'kishan', 'image': 'assets/users/man.png'},
   ];
 
   InstaStorySection({super.key});

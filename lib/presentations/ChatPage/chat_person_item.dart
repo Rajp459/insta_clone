@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../importantdata/user_id.dart';
 import 'chat_detail_screen.dart';
+import 'package:get/get.dart';
 
 class ChatPersonItem extends StatelessWidget {
-  final String currentUserId;
   final String chatPartnerId;
   final String userName;
   final String profileImageUrl;
+  final UserService userService;
 
   const ChatPersonItem({
     super.key,
-    required this.currentUserId,
     required this.chatPartnerId,
     required this.userName,
     required this.profileImageUrl,
+    required this.userService,
   });
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId = userService.getCurrentUserId();
     final roomId = ChatHelper.generateChatRoomId(currentUserId, chatPartnerId);
     final roomRef = FirebaseFirestore.instance
         .collection('chatRooms')
@@ -57,18 +59,12 @@ class ChatPersonItem extends StatelessWidget {
                   ),
                 )
               : null,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatDetailScreen(
-                  chatPartnerId: chatPartnerId,
-                  chatPartnerName: userName,
-                  userService: UserService(),
-                ),
-              ),
-            );
-          },
+          onTap: () => Get.to(
+            () => ChatDetailScreen(
+              chatPartnerId: chatPartnerId,
+              chatPartnerName: userName,
+            ),
+          ),
         );
       },
     );
