@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:insta_clone/core/service/firebase_storage.dart';
 
 import '../../importantdata/user_id.dart';
 
 class PostPageController extends GetxController {
   final TextEditingController postImageController = TextEditingController();
   final TextEditingController captionController = TextEditingController();
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final userService = UserService();
+  final Storage storage = Storage();
 
   RxString currentUserName = ''.obs;
   RxString currentProfileImage = ''.obs;
@@ -20,24 +20,18 @@ class PostPageController extends GetxController {
     _fetchUserData();
   }
 
-  // Fetch current user's data from Firestore
   void _fetchUserData() async {
-    final userService = UserService();
     final String userId = userService.getCurrentUserId();
 
     try {
-      await _firestore.collection('users').doc(userId).get();
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
+      final userDoc = await storage.getUserData(userId);
 
-      if (userDoc.exists) {
-        currentUserName.value = userDoc['name']; // Field name in your document
-        currentProfileImage.value =
-            userDoc['profile_image']; // Field name in your document
+      if (userDoc != null) {
+        currentUserName.value = userDoc['name'];
+        currentProfileImage.value = userDoc['profile_image'];
         isLoading.value = false;
       }
+      update();
     } catch (e) {
       Get.snackbar('Error', 'Error fetching user data: ${e.toString()}');
     }
@@ -55,18 +49,17 @@ class PostPageController extends GetxController {
 
     try {
       final String userId = userService.getCurrentUserId();
-      await _firestore.collection('posts').add({
-        'userId': userId,
-        'name': currentUserName.value,
-        'profile_image': currentProfileImage.value,
-        'post_image': postImage,
-        'caption': caption,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+      await storage.createPost(
+        userId: userId,
+        name: currentUserName.value,
+        profileImage: currentProfileImage.value,
+        postImage: postImage,
+        caption: caption,
+      );
 
       postImageController.clear();
       captionController.clear();
-
+      update();
       Get.snackbar('Successful', 'Post created successfully');
     } catch (e) {
       Get.snackbar('Error', 'Error: ${e.toString()}');

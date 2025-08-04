@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:insta_clone/loginAndSignUp/profile_setup_controller.dart';
+import 'package:insta_clone/application/controllers/profile_setup_controller.dart';
 import 'package:get/get.dart';
 
 class UserProfileSetup extends StatelessWidget {
-  UserProfileSetup({super.key});
-
-  final ProfileSetupController controller = Get.put(ProfileSetupController());
+  const UserProfileSetup({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,20 +11,25 @@ class UserProfileSetup extends StatelessWidget {
       appBar: AppBar(title: const Text("Create Profile")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            _buildTextField(controller.nameController, 'Your Name'),
-            _buildTextField(
-              controller.profileImageController,
-              'Profile Image URL',
-            ),
-            _buildTextField(controller.userNameController, 'username'),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: controller.createUser,
-              child: const Text('Create Profile'),
-            ),
-          ],
+        child: GetBuilder(
+          init: ProfileSetupController(),
+          builder: (controller) {
+            return ListView(
+              children: [
+                _buildTextField(controller.nameController, 'Your Name'),
+                _buildTextField(
+                  controller.profileImageController,
+                  'Profile Image URL',
+                ),
+                _buildTextField(controller.userNameController, 'username'),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: controller.createUser,
+                  child: const Text('Create Profile'),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

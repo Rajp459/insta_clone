@@ -1,69 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:insta_clone/application/controllers/story_controller.dart';
 
 class InstaStorySection extends StatelessWidget {
-  final List<Map<String, String>> stories = [
-    {'name': 'Your Story', 'image': 'assets/users/office-man.png'},
-    {'name': 'rahul', 'image': 'assets/users/man.png'},
-    {'name': 'rohan', 'image': 'assets/users/man.png'},
-    {'name': 'shyam', 'image': 'assets/users/man.png'},
-    {'name': 'kishan', 'image': 'assets/users/man.png'},
-    {'name': 'rahul', 'image': 'assets/users/man.png'},
-    {'name': 'rohan', 'image': 'assets/users/man.png'},
-    {'name': 'shyam', 'image': 'assets/users/man.png'},
-    {'name': 'kishan', 'image': 'assets/users/man.png'},
-  ];
-
-  InstaStorySection({super.key});
+  const InstaStorySection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 100,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: stories.length,
-        itemBuilder: (context, index) {
-          final story = stories[index];
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(6),
-                  child: Container(
-                    padding: EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xFFF58529),
-                          Color(0xFFDD2A7B),
-                          Color(0xFF8134AF),
-                          Color(0xFF515BD4),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+      child: GetBuilder<StoryController>(
+        init: StoryController(),
+        builder: (controller) {
+          if (controller.allUsers.isEmpty) {}
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: controller.allUsers.length,
+            itemBuilder: (context, index) {
+              final user = controller.allUsers[index];
+              final String name = user['name'] ?? 'unknown';
+              final String imageUrl = user['profile_image'] ?? '';
+
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(6),
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFFF58529),
+                              Color(0xFFDD2A7B),
+                              Color(0xFF8134AF),
+                              Color(0xFF515BD4),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 32,
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: imageUrl.isNotEmpty
+                                ? AssetImage(imageUrl)
+                                : AssetImage('assets/users/default.png'),
+                          ),
+                        ),
                       ),
                     ),
-                    child: CircleAvatar(
-                      radius: 32,
-                      backgroundColor: Colors.white,
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage(story['image']!),
-                      ),
+                    SizedBox(height: 2),
+                    Text(
+                      name,
+                      style: TextStyle(fontSize: 12),
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                     ),
-                  ),
+                  ],
                 ),
-                SizedBox(height: 2),
-                Text(
-                  story['name']!,
-                  style: TextStyle(fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+              );
+            },
           );
         },
       ),

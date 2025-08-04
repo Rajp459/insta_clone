@@ -2,16 +2,19 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/importantdata/user_id.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'chat_person_item.dart';
+import '../../presentation/pages/ChatPage/chat_person_item.dart';
 
 class ChatDetailController extends GetxController {
   final TextEditingController messageController = TextEditingController();
-  late String chatPartnerId;
-  late UserService userService;
-  late String chatPartnerName;
-  late String currentUserId;
+
+  final String chatPartnerId;
+  final String chatPartnerName;
+  final UserService userService = UserService(); // FIXED
+  late final String currentUserId;
   late String roomId;
+
   var isInitialized = false.obs;
+
   ChatDetailController({
     required this.chatPartnerId,
     required this.chatPartnerName,
@@ -20,9 +23,6 @@ class ChatDetailController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    userService = UserService();
-    currentUserId = userService.getCurrentUserId();
-    roomId = generateChatRoomId(currentUserId, chatPartnerId);
     initializeController();
   }
 
@@ -58,6 +58,7 @@ class ChatDetailController extends GetxController {
       await chatRoomRef.set({
         'unreadCounts': {currentUserId: 0},
       }, SetOptions(merge: true));
+      update();
     } catch (e) {
       Get.snackbar('Error', '$e');
     }
@@ -84,6 +85,7 @@ class ChatDetailController extends GetxController {
       batch.update(roomRef, {'unreadCounts.$currentUserId': 0});
 
       await batch.commit();
+      update();
     } catch (e) {
       //Get.snackbar('Error', '${e}');
     }
@@ -138,10 +140,15 @@ class ChatDetailController extends GetxController {
           'lastMessageTime': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
       });
-
+      update();
       messageController.clear();
     } catch (e) {
-      Get.snackbar('Error', 'Failed to send message');
+      Get.snackbar(
+        'Error',
+        'Failed to send message',
+        colorText: Colors.black,
+        backgroundColor: Colors.red.shade100,
+      );
     }
   }
 }

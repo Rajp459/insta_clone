@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'comment_controller.dart';
+import '../../../application/controllers/comment_controller.dart';
 
 class CommentPage extends StatelessWidget {
   const CommentPage({super.key, required this.postId});

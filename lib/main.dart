@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'bottom_navigation_bar/bottom_nav_bar_controller.dart';
-import 'bottom_navigation_bar/custom_bottom_navigation_bar.dart';
+import 'application/controllers/bottom_nav_bar_controller.dart';
+import 'widgets/custom_bottom_navigation_bar.dart';
 import 'loginAndSignUp/auth_check.dart';
 
 void main() async {
@@ -36,18 +36,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final BottomNavBarController navBarController = Get.put(
-      BottomNavBarController(),
+    return GetBuilder(
+      init: BottomNavBarController(),
+      builder: (controller) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: controller.pages[controller.selectedIndex.value],
+          bottomNavigationBar: CustomBottomNavigationBar(
+            selectedIndex: controller.selectedIndex.value,
+            onItemTapped: controller.changeTabIndex,
+          ),
+        );
+      },
     );
-    return Obx(() {
-      return Scaffold(
-        backgroundColor: Colors.white,
-        body: navBarController.pages[navBarController.selectedIndex.value],
-        bottomNavigationBar: CustomBottomNavigationBar(
-          selectedIndex: navBarController.selectedIndex.value,
-          onItemTapped: navBarController.changeTabIndex,
-        ),
-      );
-    });
   }
 }

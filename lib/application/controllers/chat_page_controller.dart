@@ -25,6 +25,7 @@ class ChatPageController extends GetxController {
       if (doc.exists) {
         currentUserName.value = doc['name'] ?? '';
       }
+      update();
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch user name');
     }

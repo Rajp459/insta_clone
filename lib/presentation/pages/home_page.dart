@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../Appbar/instagram_appbar.dart';
 import '../../widgets/insta_story_section.dart';
 import '../../widgets/post_section.dart';
+import 'Appbar/instagram_appbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

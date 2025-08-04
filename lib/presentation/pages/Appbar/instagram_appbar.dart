@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:insta_clone/presentations/ChatPage/chat_page.dart';
 import 'package:get/get.dart';
+
+import '../ChatPage/chat_page.dart';
 
 class InstagramAppbar extends StatelessWidget implements PreferredSizeWidget {
   const InstagramAppbar({super.key});

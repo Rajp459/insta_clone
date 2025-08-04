@@ -26,6 +26,7 @@ class PostController extends GetxController {
 
     likesMap[postId] = likeDoc.exists;
     likeCounts[postId] = likesSnapshot.docs.length;
+    update();
   }
 
   Future<void> toggleLike(String postId, String userId) async {
@@ -39,10 +40,12 @@ class PostController extends GetxController {
       await likeRef.delete();
       likesMap[postId] = false;
       likeCounts[postId] = (likeCounts[postId] ?? 1) - 1;
+      update();
     } else {
       await likeRef.set({'likedAt': FieldValue.serverTimestamp()});
       likesMap[postId] = true;
       likeCounts[postId] = (likeCounts[postId] ?? 0) + 1;
+      update();
     }
   }
 
@@ -55,5 +58,6 @@ class PostController extends GetxController {
         .listen((snapshot) {
           commentCounts[postId] = snapshot.docs.length;
         });
+    //update();
   }
 }

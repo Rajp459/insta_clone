@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:insta_clone/presentations/ChatPage/chat_page_controller.dart';
+
+import '../../application/controllers/chat_page_controller.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ChatPageController());
     return SafeArea(
       bottom: false,
       child: Padding(
@@ -23,8 +23,9 @@ class AccountPage extends StatelessWidget {
             leadingWidth: 130,
             leading: Padding(
               padding: const EdgeInsets.only(left: 16),
-              child: Obx(
-                () => Text(
+              child: GetBuilder(
+                init: ChatPageController(),
+                builder: (controller) => Text(
                   controller.currentUserName.value,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
