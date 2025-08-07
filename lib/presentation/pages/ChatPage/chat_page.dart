@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:insta_clone/importantdata/user_id.dart';
 import '../../../application/controllers/chat_page_controller.dart';
+import '../../../data/importantdata/user_id.dart';
 import 'chat_person_item.dart';
 
 class UsersOnChatPage extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:insta_clone/importantdata/user_id.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../data/importantdata/user_id.dart';
 import '../../presentation/pages/ChatPage/chat_person_item.dart';
 
 class ChatDetailController extends GetxController {

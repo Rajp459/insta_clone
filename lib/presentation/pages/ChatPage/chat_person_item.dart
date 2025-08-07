@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../importantdata/user_id.dart';
+import '../../../data/importantdata/user_id.dart';
 import 'chat_detail_screen.dart';
 import 'package:get/get.dart';
 

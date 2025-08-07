@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../main.dart';
+import 'package:insta_clone/widgets/navigation_page.dart';
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
@@ -12,7 +12,7 @@ class LoginController extends GetxController {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      Get.offAll(() => const MyHomePage(title: ''));
+      Get.offAll(() => const NavigationPage(title: ''));
 
       Get.snackbar(
         'Success',

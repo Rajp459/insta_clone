@@ -13,7 +13,6 @@ class ChatDetailScreen extends StatelessWidget {
     required this.chatPartnerId,
     required this.chatPartnerName,
   });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

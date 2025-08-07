@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../main.dart';
+import 'package:insta_clone/widgets/navigation_page.dart';
 import 'login_page.dart';
 
 class AuthCheck extends StatelessWidget {
@@ -14,7 +14,7 @@ class AuthCheck extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
-          return MyHomePage(title: '');
+          return NavigationPage(title: '');
         } else {
           return LoginPage();
         }

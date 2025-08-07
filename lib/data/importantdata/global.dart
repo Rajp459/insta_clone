@@ -1,4 +1,4 @@
-import 'package:insta_clone/importantdata/user_id.dart';
+import 'package:insta_clone/data/importantdata/user_id.dart';
 
 String? currentUserId;
 String? selectedChatRoomId;

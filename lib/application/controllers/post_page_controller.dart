@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/core/service/firebase_storage.dart';
 
-import '../../importantdata/user_id.dart';
+import '../../data/importantdata/user_id.dart';
 
 class PostPageController extends GetxController {
   final TextEditingController postImageController = TextEditingController();

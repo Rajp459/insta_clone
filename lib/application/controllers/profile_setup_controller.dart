@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/core/service/firebase_storage.dart';
-
-import '../../main.dart';
+import 'package:insta_clone/widgets/navigation_page.dart';
 
 class ProfileSetupController extends GetxController {
   final TextEditingController nameController = TextEditingController();
@@ -27,7 +26,7 @@ class ProfileSetupController extends GetxController {
       nameController.clear();
       userNameController.clear();
       profileImageController.clear();
-      Get.offAll(() => MyHomePage(title: ''));
+      Get.offAll(() => NavigationPage(title: ''));
       Get.snackbar(
         'Successful',
         'User created successfully',

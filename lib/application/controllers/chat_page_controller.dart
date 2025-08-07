@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:insta_clone/importantdata/user_id.dart';
+
+import '../../data/importantdata/user_id.dart';
 
 class ChatPageController extends GetxController {
   RxString currentUserName = ''.obs;
