@@ -15,9 +15,9 @@ class NavigationPage extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           backgroundColor: Colors.white,
-          body: controller.pages[controller.selectedIndex.value],
+          body: controller.pages[controller.selectedIndex],
           bottomNavigationBar: CustomBottomNavigationBar(
-            selectedIndex: controller.selectedIndex.value,
+            selectedIndex: controller.selectedIndex,
             onItemTapped: controller.changeTabIndex,
           ),
         );

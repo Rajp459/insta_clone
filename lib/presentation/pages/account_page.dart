@@ -27,7 +27,7 @@ class AccountPage extends StatelessWidget {
                 init: ChatPageController(),
                 builder: (controller) => Text(
                   controller.currentUserName.value,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

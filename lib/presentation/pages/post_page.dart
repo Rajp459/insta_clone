@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:insta_clone/application/controllers/post_page_controller.dart';
 import 'package:get/get.dart';
+import 'package:insta_clone/localization.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({super.key});
@@ -13,7 +15,7 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Create Post")),
+      appBar: AppBar(title: Text(AppLocale.title.getString(context))),
       body: GetBuilder(
         init: PostPageController(),
         builder: (controller) {
@@ -34,21 +36,25 @@ class _PostPageState extends State<PostPage> {
                     controller.currentUserName.value,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  subtitle: const Text("Posting as"),
+                  subtitle: Text(AppLocale.subtitle.getString(context)),
                 ),
                 const SizedBox(height: 20),
 
                 // Post fields
                 _buildTextField(
                   controller.postImageController,
-                  'Post Image URL',
+                  AppLocale.postImageUrl.getString(context),
                 ),
-                _buildTextField(controller.captionController, 'Caption'),
+                _buildTextField(
+                  controller.captionController,
+                  AppLocale.caption.getString(context),
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: controller.createPost,
-                  child: const Text('Create Post'),
+                  child: Text(AppLocale.title.getString(context)),
                 ),
+                NewWidget(),
               ],
             ),
           );
@@ -67,6 +73,38 @@ class _PostPageState extends State<PostPage> {
           border: const OutlineInputBorder(),
         ),
       ),
+    );
+  }
+}
+
+class NewWidget extends StatelessWidget {
+  NewWidget({super.key});
+
+  final FlutterLocalization localization = FlutterLocalization.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            localization.translate('en');
+          },
+          child: Text('To English'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            localization.translate('hi');
+          },
+          child: Text('हिंदी में'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            localization.translate('ja');
+          },
+          child: Text('日本語で'),
+        ),
+      ],
     );
   }
 }

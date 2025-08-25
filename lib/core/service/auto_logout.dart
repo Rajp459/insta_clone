@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:insta_clone/loginAndSignUp/login_page.dart';
 
 class AutoLogout extends GetxController {
   Timer? _inactivityTimer;
-  final Duration _inactivityDuration = Duration(seconds: 50);
+  final Duration _inactivityDuration = Duration(hours: 15);
 
   void startTimer() {
     _startInactivityTimer();
@@ -25,7 +26,9 @@ class AutoLogout extends GetxController {
   }
 
   void _performAutoLogout() {
-    print("Auto logout triggered due to inactivity.");
+    if (kDebugMode) {
+      print("Auto logout triggered due to inactivity.");
+    }
     FirebaseAuth.instance.signOut();
     Get.offAll(LoginPage());
   }

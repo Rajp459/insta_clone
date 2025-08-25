@@ -7,10 +7,10 @@ import '../../presentation/pages/reel_page.dart';
 import '../../presentation/pages/search_page.dart';
 
 class BottomNavBarController extends GetxController {
-  var selectedIndex = 0.obs;
+  var selectedIndex = 0;
 
   void changeTabIndex(int index) {
-    selectedIndex.value = index;
+    selectedIndex = index;
     update();
   }
 

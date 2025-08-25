@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -22,7 +23,9 @@ class StoryController extends GetxController {
         final String name = data['name'] ?? 'Unknown';
         final String profileImage = data['profile_image'] ?? '';
 
-        print('User: $name, Image: $profileImage');
+        if (kDebugMode) {
+          print('User: $name, Image: $profileImage');
+        }
 
         return {'name': name, 'profile_image': profileImage};
       }).toList();
